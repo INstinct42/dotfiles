@@ -1,0 +1,210 @@
+!--------------
+! Xft
+Xft.antialias: 1
+Xft.autohint: 0
+Xft.dpi: 96
+Xft.hinting: 1
+Xft.hintstyle: hintfull
+Xft.lcdfilter: lcddefault
+Xft.rgba: rgb
+
+!------------------------------------------------------------------------------
+! u r x v t
+
+! URxvt*geometry:         112x22
+! URxvt*font:            xft:terminus:size=8
+! URxvt*urlLauncher:         firefox
+URxvt*scrollBar:        false
+URxvt*scrollBar_right:        true
+URxvt*scrollColor:        #000000
+
+URxvt.font: xft:Hack:size=14
+! resize font
+URxvt.resize-font.smaller: M-S-Down
+URxvt.resize-font.bigger: M-S-Up
+
+! perl extensions
+URxvt.perl-ext-common: default,resize-font
+URxvt.perl-ext: default,url-select
+
+! launch URLs
+URxvt.keysym.M-u: perl:url-select:select_next
+URxvt.url-select.launcher: /usr/bin/google-chrome-unstable
+URxvt.url-select.underline: true
+URxvt.url-launcher: /usr/bin/firefox
+URxvt.matcher.button: 1
+
+
+! colors
+
+
+!------------------------------------------------------------------------------
+! c o l o r -  s e t t i n g s
+! ! kind of Tomorrow colorscheme
+! URxvt*background:  #ffffff
+! URxvt*foreground:  #4d4d4c
+! URxvt*cursorColor: #d6d6d6
+
+! ! X.org apps bg/fg
+! ! *background: #D0CECB
+! ! *foreground: #090C19
+
+! ! black
+! *color0:  #222946
+! ! dark grey
+! *color8:  #8C8B89
+
+! ! red
+! *color1:  #c82829
+! ! bright red
+! *color9:  #c82829
+
+! ! green
+! *color2:  #718c00
+! ! bright green
+! *color10: #718c00
+
+! ! yellow
+! *color3:  #eab700
+! ! bright yellow
+! *color11: #eab700
+
+! ! blue
+! *color4:  #4271ae
+! ! bright blue
+! *color12: #4271ae
+
+! ! magenta
+! *color5:  #8959a8
+! ! bright magenta
+! *color13: #8959a8
+
+! ! cyan
+! *color6:  #3e999f
+! ! bright cyan
+! *color14: #3e999f
+
+! ! light grey
+! *color7:  #8e908c
+! ! white
+! *color15: #ffffff
+!! euphrasia v2 by bohoomil
+
+! ! euphrasia fg/bg
+! URxvt*background:  #090C19
+! URxvt*foreground:  #E6E6E6
+! URxvt*cursorColor: #1AAA13
+
+! ! X.org apps bg/fg
+! *background: #D0CECB
+! *foreground: #090C19
+
+! ! black
+! *color0:  #222946
+! ! dark grey
+! *color8:  #8C8B89
+
+! ! red
+! *color1:  #B32323
+! ! bright red
+! *color9:  #DC2C2C
+
+! ! green
+! *color2:  #1AAA13
+! ! bright green
+! *color10: #5DCE33
+
+! ! yellow
+! *color3:  #FF9F3E
+! ! bright yellow
+! *color11: #E6CB29
+
+! ! blue
+! *color4:  #4957F3
+! ! bright blue
+! *color12: #4D79FF
+
+! ! magenta
+! *color5:  #BF3E94
+! ! bright magenta
+! *color13: #B641CC
+
+! ! cyan
+! *color6:  #09A5B3
+! ! bright cyan
+! *color14: #3CB6F3
+
+! ! light grey
+! *color7:  #AEAEAE
+! ! white
+! *color15: #DBDDE4
+! euphrasia fg/bg
+! dark, but good readability
+! *foreground:   #ecf0f1
+! *background:   #141516
+! *cursorColor:  #ecf0f1
+! *color0:       #3e464e
+! *color8:       #3e464e
+! *color1:       #db0a5b
+! *color9:       #db0a5b
+! *color2:       #3fc380
+! *color10:      #3fc380
+! *color3:       #f2784b
+! *color11:      #f2784b
+! *color4:       #22a7f0
+! *color12:      #22a7f0
+! *color5:       #f64747
+! *color13:      #f64747
+! *color6:       #55aeae
+! *color14:      #55aeae
+! *color7:       #ecf0f1
+! *color15:      #ecf0f1
+
+! *background: #222222
+! *foreground: #777777
+
+! ! Default
+! ! 0: black
+! *color0:  #222222
+! *color8:  #222222
+! ! 1: red
+! *color1:  #9f6767
+! *color9:  #9f6767
+! ! 2: green
+! *color2:  #92ac68
+! *color10: #92ac68
+! ! 3: yellow
+! *color3:  #d0d293
+! *color11: #d0d293
+! *color4:  #9aacc3
+! *color12: #9aacc3
+! ! 5: magenta
+! *color5:  #bb77a4
+! *color13: #bb77a4
+! ! 6: cyan
+! *color6:  #77bbb5
+! *color14: #77bbb5
+! ! 7: white
+! *color7:  #777777
+! *color15: #777777
+
+! Rök
+*foreground:	#353945
+*background:	#f5f5f5
+*cursorColor:	#353945
+*color0:	#5c616c
+*color8:	#5c616c
+*color1:	#e1485a
+*color9:	#e1485a
+*color2:	#35ac54
+*color10:	#f5ac54
+*color3:	#ef654a
+*color11:	#ef654a
+*color4:	#000000
+*color12:	#5294e2
+*color5:	#e81a71
+*color13:	#e81a71
+*color6:	#1ba39c
+*color14:	#1ba39c
+*color7:	#353945
+*color15:	#353945
