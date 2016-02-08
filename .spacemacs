@@ -39,6 +39,7 @@ values."
      spell-checking
      syntax-checking
      eyebrowse
+     themes-megapack
      ;; version-control
      )
    ;; List of additional packages that will be installed without being
@@ -100,7 +101,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(zenburn
+   dotspacemacs-themes '(sanityinc-tomorrow-day
+                         zenburn
                          spacemacs-dark
                          solarized-light
                          solarized-dark
@@ -111,7 +113,7 @@ values."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Hack"
-                               :size 18
+                               :size 24
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -255,6 +257,7 @@ layers configuration. You are free to put any user code."
   (setq spaceline-window-numbers-unicode nil)
   (setq spaceline-workspace-numbers-unicode nil)
 
+  ;; Make spacemacs work with sup for mails
   (add-to-list 'auto-mode-alist '("/sup.*eml$" . message-mode))
   (add-hook 'messages-mode-hook (lambda ()
                                   (auto-fill-mode 1)
@@ -262,12 +265,8 @@ layers configuration. You are free to put any user code."
                                   (search-forward-regexp "^$")))
 
   ;; (add-to-list 'auto-mode-alist '("*.fish" . fish-mode))
-  ;; (require 'req-package)
 
-
-  ;; (req-package graphviz-dot-mode
-  ;;              :init (defalias 'dot-mode 'graphviz-dot-mode))
-
+  ;; Enable evaluation in org mode buffers
   (eval-after-load 'org
     '(progn
        (org-babel-do-load-languages
@@ -276,6 +275,11 @@ layers configuration. You are free to put any user code."
           (latex . t)
           (sh . t)))
        (add-to-list 'org-src-lang-modes (quote ("dot" . graphviz-dot)))))
+
+  ;; LaTeX settings
+  ;; use xetex and export to pdf 
+  (setq-default TeX-engine 'xetex)
+  (setq-default TeX-PDF-mode t)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

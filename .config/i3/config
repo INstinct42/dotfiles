@@ -56,7 +56,8 @@ floating_modifier $mod
 # Application starting
 
 # start a webbrowser
-bindsym $hyp+w exec /usr/bin/google-chrome-unstable
+bindsym $hyp+Shift+w exec /usr/bin/google-chrome-unstable
+bindsym $hyp+w [class="google-chrome-unstable"] focus
 # bindsym $hyp+w exec tabbed -c surf "wiki.archlinux.org" -a
 
 # start a terminal
@@ -88,7 +89,8 @@ bindsym $hyp+s move scratchpad
 bindsym $mod+minus scratchpad show
 
 # show certain windows on scratchpad
-bindsym $hyp+e [title="^emacs"] scratchpad show
+# bindsym $hyp+e [title="^emacs"] scratchpad show
+bindsym $hyp+e exec emacsclient -c -a ''
 bindsym $hyp+m [title="^Sup "] scratchpad show
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
@@ -226,9 +228,8 @@ bindsym $mod+Escape mode "$mode_system"
    
 
 # Clipboard manager
-for_window [class="copyq"] floating enable
-for_window [class="copyq"] sticky enable
-bindsym $hyp+c exec copyq toggle
+for_window [class="clipit"] floating enable
+for_window [class="clipit"] sticky enable
 
 exec_always xbindkeys
 exec pulseaudio 
@@ -238,7 +239,7 @@ exec_always --no-startup-id "sleep 1; xcape -e 'Control_L=Escape'"
 exec --no-startup-id urxvtd -q -f -o 
 exec --no-startup-id pasystray
 exec --no-startup-id udiskie -Nas2
-# exec --no-startup-id clipster -d
+exec clipit -d
 exec --no-startup-id emacs --daemon 
 exec --no-startup-id redshift-gtk -l geoclue2
 exec_always --no-startup-id feh --bg-scale $HOME/pics/walls/background.jpg
