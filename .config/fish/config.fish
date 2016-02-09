@@ -1,3 +1,6 @@
+set fisher_home ~/.local/share/fisherman
+set fisher_config ~/.config/fisherman
+source $fisher_home/config.fish
 set -x PATH /home/jonas/bin $PATH
 set -x EDITOR "emacsclient -nw -a ''"
 set -x GDK_SCALE 2

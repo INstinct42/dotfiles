@@ -19,3 +19,6 @@
 
 "kbdlight down"
   XF86KbdBrightnessDown
+
+"scrot -se 'mv $f ~/pics/scrots'"
+  XF86LaunchA

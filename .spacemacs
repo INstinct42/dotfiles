@@ -32,6 +32,8 @@ values."
      pandoc
      latex
      org
+     (mu4e :variables
+           mu4e-installation-path "/usr/share/emacs/site-lisp")
      myorg
      (shell :variables
             shell-default-height 30
@@ -46,7 +48,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(fish-mode)
+   dotspacemacs-additional-packages '(fish-mode notmuch)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -280,7 +282,50 @@ layers configuration. You are free to put any user code."
   ;; use xetex and export to pdf 
   (setq-default TeX-engine 'xetex)
   (setq-default TeX-PDF-mode t)
+
+  ;; mu4e
+  (setq mu4e-maildir "~/.mail"
+        mu4e-get-mail-command "mbsync -aq"
+        mu4e-update-interval 300
+        mu4e-view-show-images t
+        mu4e-view-show-addresses t)
+  (setq message-send-mail-function
+        'message-send-mail-with-sendmail
+        sendmail-program "/usr/bin/msmtp"
+        user-full-name "Jonas Weissensel"
+        smtpmail-queue-dir "~/.mail/queue/cur"
+        smtpmail-queue-mail nil)
+
+  (setq mu4e-account-alist
+        '(("mailbox"
+           ;; variables
+           (mu4e-sent-message-behavior sent)
+           (mu4e-drafts-folder "/mailbox/draft")
+           (mu4e-sent-folder "/mailbox/sent")
+           (user-mail-address "jweissensel@mailbox.org")
+           (user-full-name "Jonas Weissensel"))
+          ("gmail"
+           (mu4e-sent-message-behavior sent)
+           (mu4e-drafts-folder "/gmail/drafts")
+           (mu4e-sent-folder "/gmail/sent")
+           (user-mail-address "jweissensel@gmail.com")
+           (user-full-name "Jonas Weissensel"))))
+  (mu4e/mail-account-reset)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(send-mail-function (quote mailclient-send-it)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:background nil))))
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
