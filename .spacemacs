@@ -31,6 +31,7 @@ values."
      dash
      pandoc
      latex
+     deft
      org
      (mu4e :variables
            mu4e-installation-path "/usr/share/emacs/site-lisp")
@@ -42,13 +43,14 @@ values."
      syntax-checking
      eyebrowse
      themes-megapack
+     python
      ;; version-control
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(fish-mode notmuch)
+   dotspacemacs-additional-packages '(fish-mode pdf-tools fontawesome)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -103,10 +105,11 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(sanityinc-tomorrow-day
+   dotspacemacs-themes '(moe-dark
+                         moe-light
                          zenburn
+                         sanityinc-tomorrow-day
                          spacemacs-dark
-                         solarized-light
                          solarized-dark
                          leuven
                          monokai)
@@ -115,7 +118,7 @@ values."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Hack"
-                               :size 24
+                               :size 20
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -252,6 +255,10 @@ in `dotspacemacs/user-config'."
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+  ;; (server-start)
+
+  ;; Powerline
+  ;; Do not use fancy powerline separators
   (setq powerline-default-separator nil)
 
   ;; Disable unicode on spaceline
@@ -268,6 +275,13 @@ layers configuration. You are free to put any user code."
 
   ;; (add-to-list 'auto-mode-alist '("*.fish" . fish-mode))
 
+  ;; use google chrome as default browser
+  (setq browse-url-browser-function 'browse-url-xdg-open)
+
+  ;; Deft
+  (setq deft-directory "~/docs/notes")
+
+
   ;; Enable evaluation in org mode buffers
   (eval-after-load 'org
     '(progn
@@ -275,7 +289,8 @@ layers configuration. You are free to put any user code."
         'org-babel-load-languages
         '((dot . t)
           (latex . t)
-          (sh . t)))
+          (sh . t)
+          (python . t)))
        (add-to-list 'org-src-lang-modes (quote ("dot" . graphviz-dot)))))
 
   ;; LaTeX settings
@@ -288,24 +303,81 @@ layers configuration. You are free to put any user code."
         mu4e-get-mail-command "mbsync -aq"
         mu4e-update-interval 300
         mu4e-view-show-images t
-        mu4e-view-show-addresses t)
+        mu4e-show-images t
+        mm-inline-text-html-with-images t
+        w3m-default-display-inline-images t
+        mu4e-view-show-addresses t
+        mu4e-use-fancy-chars nil
+        mu4e-hide-index-messages t
+        mu4e-attachment-dir "~/Downloads")
+
   (setq message-send-mail-function
         'message-send-mail-with-sendmail
         sendmail-program "/usr/bin/msmtp"
         user-full-name "Jonas Weissensel"
         smtpmail-queue-dir "~/.mail/queue/cur"
         smtpmail-queue-mail nil)
+  (setq message-kill-buffer-on-exit t)
+
+  ;; Sign and encrypt keybindings
+  (defun mc-message-mode ()
+    "Define shortcuts to sign or encrypt a message."
+    (define-key message-mode-map (kbd "\C-cs") 'mml-secure-message-sign-pgpmime)
+    (define-key message-mode-map (kbd "\C-ce") 'mml-secure-message-sign-encrypt))
+  (add-hook 'message-mode-hook 'mc-message-mode)
+
+  ;; Better HTML rendering
+  ;; (setq mu4e-html2text-command "html2text -utf8 -nobs -width 72")
+  (setq mu4e-html2text-command "w3m -I utf8 -O utf8 -T text/html")
+  ;; (setq mu4e-html2text-command "/home/jonas/build/git/mu/toys/mug/mug")
+
+  (setq mu4e-msg2pdf "/home/jonas/build/git/mu/toys/msg2pdf/msg2pdf")
+  (setq mu4e-mug "/home/jonas/build/git/mu/toys/mug/mug")
+  ;; Open message in browser
+  ;; (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+  
+
+  ;; Always sign with PGP MIME before send
+  (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+
+  ;; Shortcuts
+  (setq mu4e-maildir-shortcuts
+        '(("/gmail/INBOX" . ?g)
+          ("/mailbox/INBOX" . ?m)
+          ("/unimail/INBOX" . ?u)))
+  ;; Bookmarks
+  (setq mu4e-bookmarks
+        `(("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
+          ("date:today..now" "Today's messages" ?t)
+          ("date:7d..now" "Last 7 day's messages" ?w)
+          ("size:5M..500M" "Big messages" ?b)
+          ("list:fablab-interna.fablab-neckar-alb.org" "FabLab Interna" ?f)
+          ("from:Ira OR from:irina OR from:tolokonnikova AND NOT from:Olga" "Mail von Ira" ?s)
+          ("prio:high" "Important messages" ?h)
+          (,(mapconcat 'identity
+                       (mapcar
+                        (lambda (maildir)
+                          (concat "maildir:" (car maildir)))
+                        mu4e-maildir-shortcuts
+                        ) " OR ")
+           "All inboxes" ?i)))
 
   (setq mu4e-account-alist
         '(("mailbox"
            ;; variables
-           (mu4e-sent-message-behavior sent)
+           (mu4e-sent-message-behavior 'sent)
            (mu4e-drafts-folder "/mailbox/draft")
            (mu4e-sent-folder "/mailbox/sent")
            (user-mail-address "jweissensel@mailbox.org")
            (user-full-name "Jonas Weissensel"))
+          ("unimail"
+           (mu4e-sent-message-behavior 'sent)
+           (mu4e-drafts-folder "/unimail/draft")
+           (mu4e-sent-folder "/unimail/sent")
+           (user-mail-address "jonas.weissensel@student.uni-tuebingen.de")
+           (user-full-name "Jonas Weissensel"))
           ("gmail"
-           (mu4e-sent-message-behavior sent)
+           (mu4e-sent-message-behavior 'delete)
            (mu4e-drafts-folder "/gmail/drafts")
            (mu4e-sent-folder "/gmail/sent")
            (user-mail-address "jweissensel@gmail.com")

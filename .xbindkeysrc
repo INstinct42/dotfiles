@@ -20,5 +20,17 @@
 "kbdlight down"
   XF86KbdBrightnessDown
 
-"scrot -se 'mv $f ~/pics/scrots'"
-  XF86LaunchA
+"mocp -G"
+  XF86AudioPlay
+
+"mocp -r"
+  XF86AudioPrev
+
+"mocp -f"
+  XF86AudioNext
+
+"mocp -p"
+  Shift+XF86AudioPlay
+
+"mocp -s"
+  Control+XF86AudioPlay
