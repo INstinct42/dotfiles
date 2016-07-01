@@ -18,3 +18,5 @@ fi
 alias ls='ls --color=auto'
 PS1='[\u@\h \W]\$ '
 alias ec="emacsclient -c "
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
