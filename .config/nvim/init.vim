@@ -1,46 +1,93 @@
+""" Plugin management with vim-plug (https://github.com/junegunn/vim-plug)
 call plug#begin()
-" NERD tree will be loaded on the first invocation of NERDTreeToggle command
+""" Files
+" File navigation sidebar
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'scrooloose/nerdcommenter'
-Plug 'tpope/vim-surround'
-Plug 'jiangmiao/auto-pairs'
-Plug 'tpope/vim-speeddating'
-Plug 'neomake/neomake'
-Plug 'tpope/vim-fugitive'
-Plug 'othree/yajs.vim', { 'for': 'javascript' }
-Plug 'othree/jsdoc-syntax.vim'
-Plug 'heavenshell/vim-jsdoc'
-Plug 'gavocanov/vim-js-indent'
-Plug 'elzr/vim-json'
-Plug 'moll/vim-node'
-Plug 'vim-pandoc/vim-pandoc'
-Plug 'vim-pandoc/vim-pandoc-syntax'
-
-" Autocompletion for Javascript
-Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
-Plug 'carlitux/deoplete-ternjs'
-
-
-" Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
-function! DoRemote(arg)
-	UpdateRemotePlugins
-endfunction
-Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+" Fuzzy finding with fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/vim-easy-align'
+
+""" Programming
+" Autocompletion for neovim
+function! DoRemote(arg)
+  UpdateRemotePlugins
+endfunction
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+Plug 'carlitux/deoplete-ternjs'
+" Best GIT plugin?
+Plug 'tpope/vim-fugitive'
+" Gitk clone for vim
+Plug 'gregsexton/gitv'
+" Vim git gutter
+Plug 'airblade/vim-gitgutter'
+" Make and syntax checking
+Plug 'neomake/neomake'
+" More Javascript
+Plug 'othree/yajs.vim', { 'for': 'javascript' }
+" JsDoc for Javascript
+Plug 'othree/jsdoc-syntax.vim'
+Plug 'heavenshell/vim-jsdoc'
+" Javascript indentation etc.
+Plug 'gavocanov/vim-js-indent'
+" JSON syntax
+Plug 'elzr/vim-json'
+" Node.js support
+Plug 'moll/vim-node'
+" Autocompletion for Javascript
+Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
+" Snippets
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'rhysd/clever-f.vim'
-Plug 'justinmk/vim-sneak'
+" Syntax Range
+Plug 'vim-scripts/SyntaxRange'
 
-" UI
+""" Documentation and writing
+" Pandoc support
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+" Integration of graphviz syntax (dot, ...)
+Plug 'wannesm/wmgraphviz.vim'
+" Org-mode for vim
+Plug 'jceb/vim-orgmode'
+" Narrow feature from emacs
+Plug 'chrisbra/NrrwRgn'
+
+""" Editing
+" easy switching of function arguments
+Plug 'PeterRincker/vim-argumentative'
+" easy commenting in source code
+Plug 'scrooloose/nerdcommenter'
+" surround areas with stuff
+Plug 'tpope/vim-surround'
+" auto-pair braces and paranthesis
+Plug 'jiangmiao/auto-pairs'
+" C-A/C-X for dates
+Plug 'tpope/vim-speeddating'
+" Easy mass editing of the quickfix list
+Plug 'Olical/vim-enmasse'
+" Aligning
+Plug 'junegunn/vim-easy-align'
+" searching with f<char>
+Plug 'rhysd/clever-f.vim'
+" search with s<char1><char2>
+Plug 'justinmk/vim-sneak'
+" Undo tree navigation
+Plug 'mbbill/undotree'
+" Tab completion on the command line
+Plug 'vim-scripts/CmdlineComplete'
+
+""" UI
+" colorscheme
 Plug 'https://github.com/freeo/vim-kalisi'
+" fancy and lightweight statusline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'spolu/dwm.vim'
+" starting page with MRU files etc
 Plug 'mhinz/vim-startify'
+" 
 Plug 'tomtom/quickfixsigns_vim'
+" Calendar view
+Plug 'mattn/calendar-vim'
 
 " Some sensible defaults
 Plug 'tpope/vim-sensible'
@@ -48,7 +95,7 @@ call plug#end()
 
 let g:deoplete#enable_at_startup = 1
 if !exists('g:deoplete#omni#input_patterns')
-	let g:deoplete#omni#input_patterns = {}
+  let g:deoplete#omni#input_patterns = {}
 endif
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 " deoplete tab-complete
@@ -60,20 +107,20 @@ let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " omnifuncs
 augroup omnifuncs
-	autocmd!
-	autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd!
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 augroup end
 
 " tern
 if exists('g:plugs["tern_for_vim"]')
-	let g:tern_map_prefix = "<Leader>"
-	let g:tern_request_timeout = 1
-	let g:tern_show_argument_hints = 'on_hold'
-	let g:tern_show_signature_in_pum = 1
-	let g:tern#command = ["tern"]
-	let g:tern#arguments = ["--persistent"]
+  let g:tern_map_prefix = "<Leader>"
+  let g:tern_request_timeout = 1
+  let g:tern_show_argument_hints = 'on_hold'
+  let g:tern_show_signature_in_pum = 1
+  let g:tern#command = ["tern"]
+  let g:tern#arguments = ["--persistent"]
 
-	autocmd FileType javascript setlocal omnifunc=tern#Complete
+  autocmd FileType javascript setlocal omnifunc=tern#Complete
 endif
 autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
 
@@ -222,6 +269,7 @@ function! ShowTODOFIXME()
 endfunction
 
 nnoremap <Leader>t :call ShowTODOFIXME()<CR>
+nnoremap <Leader>fo :Files<CR>
 inoremap jk <esc><esc>
 
 " UI
@@ -286,3 +334,7 @@ endif
 
 set undofile
 set undodir=~/.config/nvim/undo
+" undotree
+nnoremap <silent> <Leader>ut :UndotreeToggle<CR>
+nnoremap <silent> <Leader>uf :UndotreeFocus<CR>
+
