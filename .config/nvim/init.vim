@@ -40,6 +40,8 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 " Syntax Range
 Plug 'vim-scripts/SyntaxRange'
+" Haskell
+Plug 'eagletmt/neco-ghc'
 
 """ Documentation and writing
 " Pandoc support
@@ -123,6 +125,14 @@ if exists('g:plugs["tern_for_vim"]')
   autocmd FileType javascript setlocal omnifunc=tern#Complete
 endif
 autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
+
+" Haskell
+"
+let g:haskellmode_completion_ghc = 0
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+" details
+let g:necoghc_enable_detailed_browse = 1
+
 
 " NERDTree
 nnoremap <silent><F12> :NERDTreeToggle<Cr>
@@ -283,7 +293,7 @@ let t_Co=256
 let &t_AB="\e[48;5;%dm"
 let &t_AF="\e[38;5;%dm"
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-set termguicolors
+"set termguicolors
 
 set expandtab
 set shiftwidth=2
