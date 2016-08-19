@@ -6,6 +6,8 @@ Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 " Fuzzy finding with fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
+"Autosave
+Plug '907th/vim-auto-save'
 
 """ Programming
 " Autocompletion for neovim
@@ -40,6 +42,9 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 " Syntax Range
 Plug 'vim-scripts/SyntaxRange'
+" Typescript
+Plug 'leafgarland/typescript-vim'
+Plug 'Quramy/tsuquyomi'
 
 """ Documentation and writing
 " Pandoc support
@@ -51,6 +56,8 @@ Plug 'wannesm/wmgraphviz.vim'
 Plug 'jceb/vim-orgmode'
 " Narrow feature from emacs
 Plug 'chrisbra/NrrwRgn'
+" LaTeX
+Plug 'lervag/vimtex'
 
 """ Editing
 " easy switching of function arguments
@@ -75,6 +82,8 @@ Plug 'justinmk/vim-sneak'
 Plug 'mbbill/undotree'
 " Tab completion on the command line
 Plug 'vim-scripts/CmdlineComplete'
+" Toggel locationlist and quickfix list
+Plug 'milkypostman/vim-togglelist'
 
 """ UI
 " colorscheme
@@ -91,20 +100,26 @@ Plug 'mattn/calendar-vim'
 
 " Some sensible defaults
 Plug 'tpope/vim-sensible'
+
+" vim
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 call plug#end()
 
 let g:deoplete#enable_at_startup = 1
 if !exists('g:deoplete#omni#input_patterns')
   let g:deoplete#omni#input_patterns = {}
 endif
+let g:deoplete#disable_auto_complete = 0
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+inoremap <silent><expr><C-@> deoplete#mappings#manual_complete()
 " deoplete tab-complete
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
 " Ultisnips
-let g:UltiSnipsExpandTrigger="<tab>"
+"let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
 " omnifuncs
 augroup omnifuncs
   autocmd!
@@ -126,6 +141,7 @@ autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
 
 " NERDTree
 nnoremap <silent><F12> :NERDTreeToggle<Cr>
+let NERDTreeIgnore = ['\.aux$', '\.bbl$', '\.bcf$', '\.blg$','\.fdb_latexmk$', '\.fls$','\.log$', '\.lof$', '\.lol$', '\.out$', '\.run.xml$', '\.synctex.gz$', '\.toc$', '\~$']
 " vim-airline
 let g:airline_theme='kalisi'
 let g:airline_powerline_fonts = 1
@@ -245,16 +261,29 @@ endfunction
 command! Tags call s:tags()
 
 
+" Typescript
+autocmd FileType typescript nmap <buffer> <Leader>h : <C-u>echo tsuquyomi#hint()<CR>
+" checkers
+let g:tsuquyomi_disable_quickfix = 1
+let g:neomake_lint_maker = {
+      \ 'exe': './node_modules/typescript/bin/tsc',
+      \ 'args': ['%:p'],
+      \ }
+
 " Javascript specifics
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 
 " General Mappings
 let mapleader="\<SPACE>"
 let maplocalleader="\<SPACE>"
+" save with space f s
 nnoremap <silent> <LocalLeader>fs :w<CR>
 "nnoremap ; :
 nnoremap Q @q
 nnoremap <silent> <Leader>bd :bdelete<CR>
+nnoremap <silent> <leader>bn :bn<cr>
+nnoremap <silent> <leader>bp :bp<cr>
+
 nnoremap <Leader>ff :Files<CR>
 nnoremap <Leader>so :so %<CR>
 nnoremap <Leader>w <C-W>
@@ -283,6 +312,7 @@ let t_Co=256
 let &t_AB="\e[48;5;%dm"
 let &t_AF="\e[38;5;%dm"
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 set termguicolors
 
 set expandtab
@@ -328,9 +358,55 @@ set noshowmode
 set showcmd
 set smartindent
 
+" Setup autosave plugin, off by default, enable with :AutoSaveToggle
+let g:auto_save = 0
+let g:auto_save_in_insert_mode = 1
+let g:auto_save_events = ["InsertLeave", "TextChanged"]
+let g:auto_save_silent = 1
+
+" custom mappings
+" paste from register 0
+xnoremap <leader>p "0p
+" edit init.vim
+nnoremap <silent><leader>ec :e $MYVIMRC<CR>
+
+" toggle lists
+let g:toggle_list_no_mappings = 1
+nmap <script> <silent> <leader>L :call ToggleLocationList()<cr>
+nmap <script> <silent> <leader>q :call ToggleQuickfixList()<cr>
+
+" vimbits mappings
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+nnoremap <silent> g# g#zz
+
 if maparg('<C-L>', 'n') ==# ''
     nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
 endif
+
+" vimtex
+let g:vimtex_format_enabled = 1
+let g:vimtex_latexmk_options = '-xelatex -synctex=1 -file-line-error -pdf -interaction=nonstopmode'
+let g:vimtex_view_method = 'mupdf'
+let g:vimtex_view_use_temp_files = 0
+let g:vimtex_latexmk_progname = '/usr/local/bin/nvr'
+" make it work with deoplete
+if !exists('g:deoplete#omni#input_patterns')
+    let g:deoplete#omni#input_patterns = {}
+endif
+let g:deoplete#omni#input_patterns.tex = '\\(?:'
+      \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
+      \ . '|\w*ref(?:\s*\{[^}]*|range\s*\{[^,}]*(?:}{)?)'
+      \ . '|hyperref\s*\[[^]]*'
+      \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+      \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
+      \ . '|\w*(gls|Gls|GLS)(pl)?\w*(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+      \ . '|includepdf(\s*\[[^]]*\])?\s*\{[^}]*'
+      \ . '|includestandalone(\s*\[[^]]*\])?\s*\{[^}]*'
+      \ .')'
 
 set undofile
 set undodir=~/.config/nvim/undo
@@ -338,3 +414,5 @@ set undodir=~/.config/nvim/undo
 nnoremap <silent> <Leader>ut :UndotreeToggle<CR>
 nnoremap <silent> <Leader>uf :UndotreeFocus<CR>
 
+" easyalign
+vmap <Enter> <Plug>(EasyAlign)
