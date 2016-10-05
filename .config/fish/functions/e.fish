@@ -1,3 +1,3 @@
-function e --description 'Use spacemacs in terminal'
-	command emacsclient -nw -a '' $argv
+function e --description 'Use neovim in terminal'
+	command nvim $argv
 end
